@@ -3,15 +3,15 @@ from .utils import loadXsection, buildInterpolator
 
 _atten_interpolators = []
 _absorp_interpolators = []
-for i in range(1, 93):
-    filename = "%02d.txt" % i
+for Z in range(1, 93):
+    filename = "%02d.txt" % Z
     E_phot, atten, absorp = loadXsection(filename)
     atten_interp = buildInterpolator(E_phot, atten)
     absorp_interp = buildInterpolator(E_phot, absorp)
     _atten_interpolators.append(atten_interp)
     _absorp_interpolators.append(absorp_interp)
     
-del i, filename, E_phot, atten, absorp, atten_interp, absorp_interp
+del Z, filename, E_phot, atten, absorp, atten_interp, absorp_interp
 
 def _getCoefficient(E, Z, interpolators):
     """Interpolates NIST cross section data for the given Z"""

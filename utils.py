@@ -24,11 +24,11 @@ def loadXsection(filename):
     ### Changing resonances so they don't have identical x values
     for i in range(len(E_phot)-1):
         if E_phot[i] == E_phot[i+1]:
-            energyStr = np.format_float_scientific(E_phot[i], precision=4)
+            energyStr = np.format_float_scientific(E_phot[i], precision=5)
             idx = energyStr.find("e")
             energyPrefix = energyStr[:idx]
             energySuffix = energyStr[idx:]
-            energyPrefixNew = str(float(energyPrefix) - 0.0001)
+            energyPrefixNew = str(float(energyPrefix) - 1e-5)
             E_phot[i] = float(energyPrefixNew + energySuffix)
     return E_phot, atten, absorp
 
