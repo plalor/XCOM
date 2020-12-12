@@ -32,10 +32,10 @@ def loadXsection(filename):
             E_phot[i] = float(energyPrefixNew + energySuffix)
     return E_phot, atten, absorp
 
-def buildInterpolator(energy, atten):
+def buildInterpolator(energy, coef):
     """Returns a function that takes energy as input and
     returns the corresponding attenuationg using log-log
-    interpolation from arguments 'energy' and 'atten'"""
-    interpRaw = interp1d(np.log(energy), np.log(atten))
+    interpolation from arguments 'energy' and 'coef'"""
+    interpRaw = interp1d(np.log(energy), np.log(coef))
     interp = lambda enrg: np.exp(interpRaw(np.log(enrg)))
     return interp

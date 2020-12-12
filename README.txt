@@ -1,4 +1,4 @@
-A simple tool for loading in and interpolating XCOM photon cross section data (https://physics.nist.gov/PhysRefData/XrayMassCoef/tab3.html)
+A simple tool for loading in and interpolating NIST photon cross section data (https://physics.nist.gov/PhysRefData/XrayMassCoef/tab3.html)
 
 Usage:
 
