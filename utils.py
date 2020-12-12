@@ -4,19 +4,23 @@ import pkgutil
 
 def loadXsection(filename):
     """Loads NIST cross section data"""
-    #path = "/path/to/XCOM/data/"
-    #E_phot, atten = np.loadtxt(path + filename, skiprows=2).T
-    
-    data = pkgutil.get_data(__name__, "data/%s" % filename).decode("utf-8")
+    data = pkgutil.get_data(__name__, "data/%s" % filename).decode("utf-8").split("\n")
     E_phot = []
     atten = []
-    for row in data.split("\n")[3:]:
-        enrg, att = row.split()
-        E_phot.append(float(enrg))
-        atten.append(float(att))
+    absorp = []
+    for i in range(10, len(data)):
+        row = data[i].split()
+        if len(row) == 3:
+            E_phot.append(float(row[0]))
+            atten.append(float(row[1]))
+            absorp.append(float(row[2]))
+        elif len(row) == 4:
+            E_phot.append(float(row[1]))
+            atten.append(float(row[2]))
+            absorp.append(float(row[3]))
     E_phot = np.array(E_phot)
     atten = np.array(atten)
-    
+    absorp = np.array(absorp)
     ### Changing resonances so they don't have identical x values
     for i in range(len(E_phot)-1):
         if E_phot[i] == E_phot[i+1]:
@@ -24,11 +28,9 @@ def loadXsection(filename):
             idx = energyStr.find("e")
             energyPrefix = energyStr[:idx]
             energySuffix = energyStr[idx:]
-            energyPrefixNew = str(float(energyPrefix) - 0.001)
-            energyNew = energyPrefixNew + energySuffix
-            E_phot[i] = energyNew
-    
-    return E_phot, atten
+            energyPrefixNew = str(float(energyPrefix) - 0.0001)
+            E_phot[i] = float(energyPrefixNew + energySuffix)
+    return E_phot, atten, absorp
 
 def buildInterpolator(energy, atten):
     """Returns a function that takes energy as input and
