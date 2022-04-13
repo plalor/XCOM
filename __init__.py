@@ -6,25 +6,22 @@ _IncoherScatterInterpolators = []
 _PhotoelAbsorbInterpolators = []
 _NuclearPrPrdInterpolators = []
 _ElectronPrPrdInterpolators = []
-_PrPrdInterpolators = []
 _TotWCoherentInterpolators = []
 _TotWoCoherentInterpolators = []
 
 for Z in range(1, 101):
     filename = "%02d.txt" % Z
     PhotonEnergy_arr, CoherentScatter_arr, IncoherScatter_arr, PhotoelAbsorb_arr, NuclearPrPrd_arr, ElectronPrPrd_arr, TotWCoherent_arr, TotWoCoherent_arr = loadXsection(filename)
-    PrPrd_arr = NuclearPrPrd_arr + ElectronPrPrd_arr
     
     _CoherentScatterInterpolators.append(buildInterpolator(PhotonEnergy_arr, CoherentScatter_arr))
     _IncoherScatterInterpolators.append(buildInterpolator(PhotonEnergy_arr, IncoherScatter_arr))
     _PhotoelAbsorbInterpolators.append(buildInterpolator(PhotonEnergy_arr, PhotoelAbsorb_arr))
     _NuclearPrPrdInterpolators.append(buildInterpolator(PhotonEnergy_arr, NuclearPrPrd_arr))
     _ElectronPrPrdInterpolators.append(buildInterpolator(PhotonEnergy_arr, ElectronPrPrd_arr))
-    _PrPrdInterpolators.append(buildInterpolator(PhotonEnergy_arr, PrPrd_arr))
     _TotWCoherentInterpolators.append(buildInterpolator(PhotonEnergy_arr, TotWCoherent_arr))
     _TotWoCoherentInterpolators.append(buildInterpolator(PhotonEnergy_arr, TotWoCoherent_arr))
 
-del Z, filename, PhotonEnergy_arr, CoherentScatter_arr, IncoherScatter_arr, PhotoelAbsorb_arr, NuclearPrPrd_arr, ElectronPrPrd_arr, PrPrd_arr, TotWCoherent_arr, TotWoCoherent_arr
+del Z, filename, PhotonEnergy_arr, CoherentScatter_arr, IncoherScatter_arr, PhotoelAbsorb_arr, NuclearPrPrd_arr, ElectronPrPrd_arr, TotWCoherent_arr, TotWoCoherent_arr
 
 def _getCoefficient(E, Z, interpolators):
     """Interpolates NIST cross section data for the given Z"""
@@ -32,7 +29,7 @@ def _getCoefficient(E, Z, interpolators):
         return np.array([_getCoefficient(E, Z[i], interpolators) for i in range(np.size(Z))])
     if Z < 1 or Z > 100:
         raise ValueError("Invalid value: Z = %d; Z must be between 1 and 100" % Z)
-    elif np.min(E) < 1e-3 or np.max(E) > 2e1:
+    if np.min(E) < 1e-3 or np.max(E) > 2e1:
         raise ValueError("Energy must be between 1 keV and 20 MeV")
     idx1 = np.floor(Z-1).astype('int')
     idx2 = np.ceil(Z-1).astype('int')
@@ -64,4 +61,4 @@ def mu_CS(E, Z):
 def mu_PP(E, Z):
     """Returns the pair production mass attenuation coefficient 
     (cm^2/g) of atomic number Z at energy E (in MeV)"""
-    return _getCoefficient(E, Z, _PrPrdInterpolators)
+    return _getCoefficient(E, Z, _NuclearPrPrdInterpolators)
