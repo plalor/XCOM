@@ -2,11 +2,10 @@ import numpy as np
 from scipy.interpolate import interp1d
 import pkgutil
 
-def loadXsection(filename):
-    """Loads NIST cross section data"""    
-    data = pkgutil.get_data(__name__, "data/%s" % filename).decode("utf-8")
-    data_arr = data.split("\n")[3:-1]    
-    n = len(data_arr)
+def loadMassAtten(filename):
+    """Loads NIST mass attenuation coefficient data"""    
+    data = pkgutil.get_data(__name__, "MassAtten/%s" % filename).decode("utf-8").split("\n")[3:-1]
+    n = len(data)
     
     PhotonEnergy_arr = np.zeros(n)
     CoherentScatter_arr = np.zeros(n)
@@ -18,7 +17,7 @@ def loadXsection(filename):
     TotWoCoherent_arr = np.zeros(n)
 
     for i in range(n):
-        PhotonEnergy, CoherentScatter, IncoherScatter, PhotoelAbsorb, NuclearPrPrd, ElectronPrPrd, TotWCoherent, TotWoCoherent = data_arr[i].split()
+        PhotonEnergy, CoherentScatter, IncoherScatter, PhotoelAbsorb, NuclearPrPrd, ElectronPrPrd, TotWCoherent, TotWoCoherent = data[i].split()
         PhotonEnergy_arr[i] = PhotonEnergy
         CoherentScatter_arr[i] = CoherentScatter
         IncoherScatter_arr[i] = IncoherScatter
@@ -28,7 +27,7 @@ def loadXsection(filename):
         TotWCoherent_arr[i] = TotWCoherent
         TotWoCoherent_arr[i] = TotWoCoherent
     
-    ### Changing resonances so they don't have identical x values
+    ### Changing absorption edge energies so they don't have identical x values
     for i in range(n-1):
         if PhotonEnergy_arr[i] == PhotonEnergy_arr[i+1]:
             energyStr = np.format_float_scientific(PhotonEnergy_arr[i], precision=5)
@@ -39,6 +38,34 @@ def loadXsection(filename):
             PhotonEnergy_arr[i] = float(energyPrefixNew + energySuffix)
     
     return PhotonEnergy_arr, CoherentScatter_arr, IncoherScatter_arr, PhotoelAbsorb_arr, NuclearPrPrd_arr, ElectronPrPrd_arr, TotWCoherent_arr, TotWoCoherent_arr
+
+def loadEnergyAbsorp(filename):
+    """Loads NIST mass energy absorption data"""
+    data = pkgutil.get_data(__name__, "EnergyAbsorp/%s" % filename).decode("utf-8").split("\n")[10:-1]
+    n = len(data)
+    PhotonEnergy_arr = np.zeros(n)
+    EnergyAbsorp_arr = np.zeros(n)
+    
+    for i in range(n):
+        row = data[i].split()
+        if len(row) == 3:
+            PhotonEnergy_arr[i] = row[0]
+            EnergyAbsorp_arr[i] = row[2]
+        elif len(row) == 4:
+            PhotonEnergy_arr[i] = row[1]
+            EnergyAbsorp_arr[i] = row[3]
+
+    ### Changing absorption edge energies so they don't have identical x values
+    for i in range(n-1):
+        if PhotonEnergy_arr[i] == PhotonEnergy_arr[i+1]:
+            energyStr = np.format_float_scientific(PhotonEnergy_arr[i], precision=5)
+            idx = energyStr.find("e")
+            energyPrefix = energyStr[:idx]
+            energySuffix = energyStr[idx:]
+            energyPrefixNew = str(float(energyPrefix) - 1e-5)
+            PhotonEnergy_arr[i] = float(energyPrefixNew + energySuffix)
+            
+    return PhotonEnergy_arr, EnergyAbsorp_arr
 
 def buildInterpolator(x, y):
     """Returns a function that takes energy as input and

@@ -8,7 +8,7 @@ The attenuation of photons through a material is described by the Beer-Lambert l
 
 I / I_0 = exp(-mu(E, Z) * lambda)
 
-where mu(E, Z) is the mass attenuation coefficient. In the MeV energy range, photon interactions are dominated by the the photoelectric effect (PE), Compton scattering (CS), and pair production (PP). XCOM offers four functions: `mu_PE(E, Z)`, `mu_CS(E, Z)`, `mu_PP(E, Z)`, and `mu_tot(E, Z)`, which return the corresponding mass attenuation coefficient (cm^2/g) at a given energy `E` (in MeV) and atomic number `Z`.
+where mu(E, Z) is the mass attenuation coefficient. In the MeV energy range, photon interactions are dominated by the the photoelectric effect (PE), Compton scattering (CS), and pair production (PP). XCOM offers five functions: `mu_PE(E, Z)`, `mu_CS(E, Z)`, `mu_PP(E, Z)`, `mu_tot(E, Z)`, and `mu_en(E, Z)` which return the corresponding mass attenuation coefficient (cm^2/g) at a given energy `E` (in MeV) and atomic number `Z`.
 
 See more at https://physics.nist.gov/PhysRefData/XrayMassCoef/chap2.html
 
