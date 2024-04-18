@@ -49,8 +49,8 @@ def mu_tot(E, Z):
         return np.array([mu_tot(E, Z[i]) for i in range(np.size(Z))])
     if Z < 1 or Z > 100:
         raise ValueError("Invalid value: Z = %d; Z must be between 1 and 100" % Z)
-    if np.min(E) < 1e-3 or np.max(E) > 2e1:
-        raise ValueError("Energy must be between 1 keV and 20 MeV")
+    if np.min(E) < 1e-3 or np.max(E) > 1e5:
+        raise ValueError("Energy must be between 1 keV and 100 GeV")
     return _getCoefficient(E, Z, _TotWCoherentInterpolators)
 
 def mu_PE(E, Z):
@@ -60,8 +60,8 @@ def mu_PE(E, Z):
         return np.array([mu_PE(E, Z[i]) for i in range(np.size(Z))])
     if Z < 1 or Z > 100:
         raise ValueError("Invalid value: Z = %d; Z must be between 1 and 100" % Z)
-    if np.min(E) < 1e-3 or np.max(E) > 2e1:
-        raise ValueError("Energy must be between 1 keV and 20 MeV")
+    if np.min(E) < 1e-3 or np.max(E) > 1e5:
+        raise ValueError("Energy must be between 1 keV and 100 GeV")
     return _getCoefficient(E, Z, _PhotoelAbsorbInterpolators)
 
 def mu_CS(E, Z):
@@ -71,8 +71,8 @@ def mu_CS(E, Z):
         return np.array([mu_CS(E, Z[i]) for i in range(np.size(Z))])
     if Z < 1 or Z > 100:
         raise ValueError("Invalid value: Z = %d; Z must be between 1 and 100" % Z)
-    if np.min(E) < 1e-3 or np.max(E) > 2e1:
-        raise ValueError("Energy must be between 1 keV and 20 MeV")
+    if np.min(E) < 1e-3 or np.max(E) > 1e5:
+        raise ValueError("Energy must be between 1 keV and 100 GeV")
     return _getCoefficient(E, Z, _IncoherScatterInterpolators)
 
 def mu_PP(E, Z):
@@ -82,8 +82,8 @@ def mu_PP(E, Z):
         return np.array([mu_PP(E, Z[i]) for i in range(np.size(Z))])
     if Z < 1 or Z > 100:
         raise ValueError("Invalid value: Z = %d; Z must be between 1 and 100" % Z)
-    if np.min(E) < 1e-3 or np.max(E) > 2e1:
-        raise ValueError("Energy must be between 1 keV and 20 MeV")
+    if np.min(E) < 1e-3 or np.max(E) > 1e5:
+        raise ValueError("Energy must be between 1 keV and 100 GeV")
     return _getCoefficient(E, Z, _NuclearPrPrdInterpolators)
 
 def mu_en(E, Z):
